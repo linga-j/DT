@@ -1,0 +1,123 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width,initial-scale=1" />
+  <title>Department Timetable Generator (Frontend)</title>
+  <link rel="stylesheet" href="style.css" />
+</head>
+<body>
+<header>
+  <h1>Department Timetable Generator</h1>
+  <p>6-Day Order • 5 Periods/Day • Labs auto-blocked • Max 3/day per dept faculty</p>
+</header>
+
+<main>
+  <section class="panel">
+    <h2>Global Settings</h2>
+    <div class="row">
+      <div class="field">
+        <label>Days per Cycle</label>
+        <input type="number" id="daysPerCycle" value="6" min="1" />
+      </div>
+      <div class="field">
+        <label>Periods per Day</label>
+        <input type="number" id="periodsPerDay" value="5" min="1" />
+      </div>
+      <div class="field">
+        <label>Max Dept Periods/Faculty/Day</label>
+        <input type="number" id="maxPerDayDept" value="3" min="1" />
+      </div>
+    </div>
+  </section>
+
+  <section class="panel">
+    <h2>Faculty</h2>
+    <form id="facultyForm" class="row">
+      <input type="text" id="facName" placeholder="Faculty name (e.g., Prof. Ram)" required />
+      <input type="text" id="facCode" placeholder="Short code (e.g., RAM)" required />
+      <label class="check">
+        <input type="checkbox" id="facIsDept" checked />
+        Department faculty (cap = max 3/day)
+      </label>
+      <button type="submit">Add Faculty</button>
+    </form>
+    <div id="facultyList" class="list"></div>
+  </section>
+
+  <section class="panel">
+    <h2>Classes (UG/PG, Year, Section)</h2>
+    <form id="classForm" class="row">
+      <select id="course">
+        <option value="UG">UG</option>
+        <option value="PG">PG</option>
+      </select>
+      <select id="year">
+        <option value="1">1</option>
+        <option value="2">2</option>
+        <option value="3">3</option>
+      </select>
+      <select id="section">
+        <option>A</option>
+        <option>B</option>
+      </select>
+      <div class="field">
+        <label>Max Dept Subjects (for UG1/UG2)</label>
+        <input type="number" id="maxDeptSubjects" value="3" min="1" />
+      </div>
+      <button type="submit">Add Class</button>
+    </form>
+    <div id="classList" class="list"></div>
+  </section>
+
+  <section class="panel">
+    <h2>Subjects (per Class)</h2>
+    <form id="subjectForm" class="row">
+      <select id="subClass" required></select>
+      <input type="text" id="subName" placeholder="Subject name (e.g., C Programming)" required />
+      <select id="subHours" required>
+        <option value="60">60 hours</option>
+        <option value="90" selected>90 hours</option>
+      </select>
+      <select id="subType" required>
+        <option value="theory">Theory</option>
+        <option value="lab">Lab</option>
+      </select>
+      <select id="subFaculty" required></select>
+
+      <div class="field">
+        <label>Lab Block Size</label>
+        <select id="labBlock">
+          <option value="auto" selected>Auto by Year</option>
+          <option value="2">2 (UG1/UG2)</option>
+          <option value="3">3 (UG1/UG2)</option>
+          <option value="5">5 (UG3 Full Day)</option>
+        </select>
+      </div>
+      <button type="submit">Add Subject</button>
+    </form>
+    <div id="subjectList" class="list"></div>
+  </section>
+
+  <section class="panel">
+    <h2>Generate Draft Timetable (Frontend)</h2>
+    <div class="row">
+      <button id="generateBtn">Generate for All Classes</button>
+      <button id="clearBtn" class="secondary">Clear All Timetables</button>
+    </div>
+    <p class="hint">This is a client-side draft respecting: fixed faculty per subject, labs blocking by year, 6×5 grid, and ≤3/day for dept faculty. Backend will replace this later.</p>
+  </section>
+
+  <section id="output" class="panel">
+    <h2>Timetables</h2>
+    <div id="tables"></div>
+  </section>
+</main>
+
+<footer>
+  <p>© Department Timetable — Frontend Prototype</p>
+</footer>
+
+<script src="script.js"></script>
+</body>
+</html>
