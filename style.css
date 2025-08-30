@@ -1,0 +1,74 @@
+* { box-sizing: border-box; }
+html, body { margin: 0; padding: 0; font-family: system-ui, Arial, sans-serif; color: #1f2937; background: #f7f7fb; }
+
+header { background: #0f172a; color: #fff; padding: 24px 16px; text-align: center; }
+header h1 { margin: 0 0 6px; font-weight: 700; }
+header p { margin: 0; opacity: .85; }
+
+main { max-width: 1100px; margin: 20px auto; padding: 0 12px; }
+
+.panel {
+  background: #ffffff;
+  border: 1px solid #e5e7eb;
+  border-radius: 12px;
+  padding: 16px;
+  margin-bottom: 16px;
+  box-shadow: 0 1px 2px rgba(0,0,0,0.04);
+}
+.panel h2 { margin: 0 0 12px; font-size: 20px; }
+
+.row { display: flex; flex-wrap: wrap; gap: 10px; align-items: center; }
+.field { display: flex; flex-direction: column; gap: 6px; }
+
+input[type="text"], input[type="number"], select {
+  padding: 10px 12px; border: 1px solid #d1d5db; border-radius: 8px; min-width: 180px; background: #fff;
+}
+.check { display: flex; align-items: center; gap: 8px; }
+
+button {
+  padding: 10px 14px; border: 1px solid transparent; border-radius: 8px;
+  background: #2563eb; color: #fff; cursor: pointer; font-weight: 600;
+}
+button.secondary { background: #6b7280; }
+button:hover { filter: brightness(0.95); }
+
+.list { display: grid; gap: 8px; margin-top: 10px; }
+.card {
+  background: #f9fafb; border: 1px solid #e5e7eb; border-radius: 10px; padding: 10px 12px;
+  display: flex; justify-content: space-between; align-items: center;
+}
+.tag { font-size: 12px; padding: 2px 8px; border-radius: 999px; background: #e5e7eb; color: #111827; margin-left: 6px; }
+
+.hint { color: #6b7280; font-size: 14px; }
+
+.tableBlock { margin: 16px 0 24px; }
+.tableBlock h3 { margin: 0 0 8px; }
+.tableBlock .grid { width: 100%; border-collapse: collapse; overflow: hidden; border-radius: 10px; }
+.grid th, .grid td { border: 1px solid #e5e7eb; padding: 8px; text-align: center; font-size: 14px; }
+.grid th { background: #0f172a; color: #fff; }
+.grid td.empty { color: #9ca3af; }
+
+.badgeLab { background: #fde68a; }
+.badgeDept { background: #bbf7d0; }
+.badgeExt { background: #e0e7ff; }
+.badgeWarn { background: #fecaca; }
+
+footer { text-align: center; color: #6b7280; padding: 18px 8px; }
+
+.grid td[draggable="true"] {
+  cursor: grab;
+}
+
+.grid td[draggable="true"]:active {
+  cursor: grabbing;
+}
+
+.grid td.dragging {
+  opacity: 0.4;
+  border: 2px dashed #9ca3af;
+}
+
+.grid td.drag-over {
+  background: #f3f4f6;
+  border: 1px dashed #4b5563;
+}
