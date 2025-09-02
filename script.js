@@ -4,7 +4,8 @@ const state = {
   faculties: [], // {id,name,code,isDept}
   classes: [],   // {id,course,year,section,maxDeptSubjects}
   subjects: [],  // {id,classId,name,hours,type,facultyId,labBlockAuto|null,labBlockResolved}
-  timetables: {} // classId -> 2D [day][period] = {subjectId, facultyId}
+  timetables: {}, // classId -> 2D [day][period] = {subjectId, facultyId}
+  clashes: new Set() // Stores string identifiers for clashes: "FACULTYID-DAY-PERIOD"
 };
 
 // ======= Helpers =======
@@ -316,7 +317,9 @@ function generateAll() {
 
     state.timetables[c.id] = grid;
   });
-
+  
+  // After generation, check for faculty clashes across all timetables
+  checkAllFacultyClashes();
   renderTables();
 }
 
@@ -365,30 +368,83 @@ function drop(e) {
 
   const targetClassId = this.getAttribute('data-class-id');
   
-  // Check if the source and target cells are different
   if (dragSourceCell === this) {
     return;
   }
 
-  // Get source and target positions
   const sourceDay = parseInt(dragSourceCell.getAttribute('data-day'));
   const sourcePeriod = parseInt(dragSourceCell.getAttribute('data-period'));
   const targetDay = parseInt(this.getAttribute('data-day'));
   const targetPeriod = parseInt(this.getAttribute('data-period'));
 
-  // Get the subject data for the source and target
   const sourceSlot = state.timetables[dragSourceClassId]?.[sourceDay]?.[sourcePeriod] || null;
   const targetSlot = state.timetables[targetClassId]?.[targetDay]?.[targetPeriod] || null;
+
+  // NEW LOGIC: Check for faculty clash before swapping
+  const sourceFacultyId = sourceSlot?.facultyId;
+  const targetFacultyId = targetSlot?.facultyId;
+
+  // Check if the source faculty is already assigned at the target slot's time
+  if (sourceFacultyId && isFacultyAlreadyAssigned(sourceFacultyId, targetDay, targetPeriod, dragSourceClassId)) {
+    alert(`Cannot move subject. Faculty is already assigned to another class at Day ${targetDay + 1}, Period ${targetPeriod + 1}.`);
+    return;
+  }
+  
+  // Check if the target faculty is already assigned at the source slot's time
+  if (targetFacultyId && isFacultyAlreadyAssigned(targetFacultyId, sourceDay, sourcePeriod, targetClassId)) {
+    alert(`Cannot move subject. The faculty for this slot is already assigned to another class at Day ${sourceDay + 1}, Period ${sourcePeriod + 1}.`);
+    return;
+  }
 
   // Swap the subjects in the state
   if (state.timetables[dragSourceClassId] && state.timetables[targetClassId]) {
     state.timetables[dragSourceClassId][sourceDay][sourcePeriod] = targetSlot;
     state.timetables[targetClassId][targetDay][targetPeriod] = sourceSlot;
   }
-
-  // Re-render the tables to reflect the new state
+  
+  checkAllFacultyClashes();
   renderTables();
 }
+
+// Check if a faculty member is assigned to any other class at a specific day/period
+function isFacultyAlreadyAssigned(facultyId, day, period, classIdToExclude) {
+  for (const c of state.classes) {
+    if (c.id === classIdToExclude) continue; // Exclude the current class
+    const slot = state.timetables[c.id]?.[day]?.[period];
+    if (slot && slot.facultyId === facultyId) {
+      return true;
+    }
+  }
+  return false;
+}
+
+// Populate the state.clashes set with all existing faculty conflicts
+function checkAllFacultyClashes() {
+  state.clashes.clear();
+  const facultyOccupancy = {}; // { facultyId: { day: { period: [classId, classId, ...]} } }
+  
+  state.classes.forEach(c => {
+    const grid = state.timetables[c.id];
+    if (!grid) return;
+    grid.forEach((day, d) => {
+      day.forEach((slot, p) => {
+        if (slot && slot.facultyId) {
+          const fid = slot.facultyId;
+          const key = `${fid}-${d}-${p}`;
+          if (facultyOccupancy[key]) {
+             // Clash detected! Add both the existing and the new entry to the set
+             state.clashes.add(facultyOccupancy[key]);
+             state.clashes.add(`${c.id}-${d}-${p}`);
+          } else {
+             // First time this faculty is scheduled at this time slot
+             facultyOccupancy[key] = `${c.id}-${d}-${p}`;
+          }
+        }
+      });
+    });
+  });
+}
+
 
 // ======= Render tables =======
 function renderTables() {
@@ -439,6 +495,12 @@ function renderTables() {
           
           cell.setAttribute('data-subject-id', slot.subjectId);
           cell.setAttribute('draggable', true);
+
+          // Check for faculty clash
+          const clashKey = `${c.id}-${d}-${p}`;
+          if (state.clashes.has(clashKey)) {
+              cell.classList.add('badgeWarn');
+          }
         }
         
         // Add event listeners for drag and drop
