@@ -53,8 +53,6 @@ button:hover { filter: brightness(0.95); }
 .badgeExt { background: #e0e7ff; }
 .badgeWarn { background: #fecaca; }
 
-footer { text-align: center; color: #6b7280; padding: 18px 8px; }
-
 .grid td[draggable="true"] {
   cursor: grab;
 }
@@ -72,3 +70,5 @@ footer { text-align: center; color: #6b7280; padding: 18px 8px; }
   background: #f3f4f6;
   border: 1px dashed #4b5563;
 }
+
+footer { text-align: center; color: #6b7280; padding: 18px 8px; }
