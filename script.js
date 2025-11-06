@@ -592,12 +592,17 @@ el('#course').addEventListener('change', updateYearSelect);
 (function boot() {
   // Seed a couple of faculties/classes for quick testing (you can remove)
   state.faculties = [
-    {id: uid(), name:'Prof. Ram', code:'RAM', isDept:true},
-    {id: uid(), name:'Prof. Kiran', code:'KIR', isDept:true},
-    {id: uid(), name:'Prof. Latha', code:'LAT', isDept:true},
-    {id: uid(), name:'English Dept', code:'ENG', isDept:false},
-    {id: uid(), name:'Tamil Dept', code:'TAM', isDept:false},
-    {id: uid(), name:'Maths Dept', code:'MAT', isDept:false},
+    {id: uid(), name:'Prof. Senthildevi', code:'KAS', isDept:true},
+    {id: uid(), name:'Prof. Asma Begam', code:'AB', isDept:true},
+    {id: uid(), name:'Prof. Sathyapriya', code:'MS', isDept:true},
+    {id: uid(), name:'Prof. Prabahari', code:'RP', isDept:true},
+    {id: uid(), name:'Prof. Narendirakumar', code:'VKN', isDept:true},
+    {id: uid(), name:'Prof. Prabhu', code:'GP', isDept:true},
+    {id: uid(), name:'Prof. Prakash', code:'NP', isDept:true},
+    {id: uid(), name:'Prof. Anna Poorani', code:'AP', isDept:true},
+    {id: uid(), name:'Prof. Harini', code:'MH', isDept:true},
+    {id: uid(), name:'Prof. Rupitha', code:'TR', isDept:true},
+    {id: uid(), name:'Prof. Saranya', code:'DS', isDept:true},
   ];
   renderFacultyList(); refreshFacultySelect();
 
